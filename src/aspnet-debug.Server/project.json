@@ -18,7 +18,7 @@
   },
 
   "frameworks": {
-    "dnx451": {
+    "net451": {
       "dependencies": {
         "aspnet-debug.Shared": "1.0.0-*"
       }

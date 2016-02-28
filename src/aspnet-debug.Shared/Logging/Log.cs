@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using log4net;
 using log4net.Config;
 
-namespace aspnet_debug.Shared
+namespace aspnet_debug.Shared.Logging
 {
     public class Log
     {
@@ -28,6 +24,11 @@ namespace aspnet_debug.Shared
                 XmlConfigurator.ConfigureAndWatch(configFile);
                 Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().Name);
             }
+        }
+
+        public static ILog GetLogger(Type loggerType)
+        {
+            return LogManager.GetLogger(loggerType);
         }
     }
 }

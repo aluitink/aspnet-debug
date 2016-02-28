@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using aspnet_debug.Shared;
+using aspnet_debug.Shared.Logging;
 
 namespace aspnet_debug.Server
 {
@@ -15,6 +15,12 @@ namespace aspnet_debug.Server
 
             Log.Logger.Info("Server starting...");
 
+            using (var server = new Shared.Server.Server())
+            {
+                server.Start();
+
+                server.WaitForExit();
+            }
         }
     }
 }
