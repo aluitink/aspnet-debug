@@ -10,7 +10,7 @@ COPY src/aspnet-debug.Shared /opt/aspnet-debug/src/aspnet-debug.Shared
 RUN ["mono", "/opt/aspnet-debug/.nuget/NuGet.exe", "restore", "/opt/aspnet-debug/src/aspnet-debug.Shared/packages.config", "-OutputDirectory", "/opt/aspnet-debug/src/packages"]
 
 WORKDIR /opt/aspnet-debug/src/aspnet-debug.Shared
-RUN ["xbuild", "/p:Configuration=Debug", "aspnet-debug.Shared.csproj"]
+RUN ["xbuild", "/p:Configuration=Debug", "/noconsolelogger", "/nologo", "aspnet-debug.Shared.csproj"]
 
 COPY src/aspnet-debug.Server/project.json /opt/aspnet-debug/src/aspnet-debug.Server/
 
