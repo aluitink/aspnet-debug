@@ -7,10 +7,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BA167420-6D2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{790A51D0-3FB4-43B7-972A-A6F9E33019E6}"
 	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
 		global.json = global.json
+		supervisord.conf = supervisord.conf
 	EndProjectSection
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "aspnet-debug.Server", "src\aspnet-debug.Server\aspnet-debug.Server.xproj", "{1F86436F-72D3-480F-B0F2-613F3237AF83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aspnet-debug.Shared", "src\aspnet-debug.Shared\aspnet-debug.Shared.csproj", "{D0F1D8F6-9DFD-47CD-9AD9-D8DFE0B3B4A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,11 +26,16 @@ Global
 		{1F86436F-72D3-480F-B0F2-613F3237AF83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F86436F-72D3-480F-B0F2-613F3237AF83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F86436F-72D3-480F-B0F2-613F3237AF83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0F1D8F6-9DFD-47CD-9AD9-D8DFE0B3B4A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0F1D8F6-9DFD-47CD-9AD9-D8DFE0B3B4A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0F1D8F6-9DFD-47CD-9AD9-D8DFE0B3B4A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0F1D8F6-9DFD-47CD-9AD9-D8DFE0B3B4A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{1F86436F-72D3-480F-B0F2-613F3237AF83} = {BA167420-6D20-46E2-B6D8-00404A68BF20}
+		{D0F1D8F6-9DFD-47CD-9AD9-D8DFE0B3B4A0} = {BA167420-6D20-46E2-B6D8-00404A68BF20}
 	EndGlobalSection
 EndGlobal
