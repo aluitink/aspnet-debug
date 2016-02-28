@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0-*",
+  "frameworks": {
+    "net451": {
+      "wrappedProject": "../../src/aspnet-debug.Shared/aspnet-debug.Shared.csproj",
+      "bin": {
+        "assembly": "../../src/aspnet-debug.Shared/obj/{configuration}/aspnet-debug.Shared.dll",
+        "pdb": "../../src/aspnet-debug.Shared/obj/{configuration}/aspnet-debug.Shared.pdb"
+      },
+      "dependencies": {
+        "log4net": "2.0.5"
+      }
+    }
+  }
+}

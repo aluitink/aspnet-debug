@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0-*",
+  "frameworks": {
+    "net451": {
+      "bin": {
+        "assembly": "../../src/aspnet-debug.Shared/bin/Debug/log4net.dll"
+      }
+    }
+  }
+}
