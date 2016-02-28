@@ -1,4 +1,4 @@
-FROM microsoft/aspnet:1.0.0-rc1-final
+FROM microsoft/aspnet:1.0.0-rc1-update1
 
 RUN apt-get update -qq && apt-get install -qqy supervisor
 
