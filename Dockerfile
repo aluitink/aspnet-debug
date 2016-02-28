@@ -10,7 +10,7 @@ COPY src/aspnet-debug.Shared /opt/aspnet-debug/src/aspnet-debug.Shared
 RUN ["mono", "/opt/aspnet-debug/.nuget/NuGet.exe", "restore", "/opt/aspnet-debug/src/aspnet-debug.Shared/packages.config", "-OutputDirectory", "/opt/aspnet-debug/src/packages"]
 
 WORKDIR /opt/aspnet-debug/src/aspnet-debug.Shared
-RUN ["xbuild", "/p:Configuration=Release", "aspnet-debug.Shared.csproj"]
+RUN ["xbuild", "/p:Configuration=Debug", "aspnet-debug.Shared.csproj"]
 
 COPY src/aspnet-debug.Server/project.json /opt/aspnet-debug/src/aspnet-debug.Server/
 
@@ -25,4 +25,4 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 EXPOSE 13001
 
 #CMD ["/usr/bin/supervisord"]
-CMD ["dnx", "-p", "project.json", "aspnet_debug.Server"]
+CMD ["dnx", "-p", "project.json", "--configuration", "Debug", "aspnet_debug.Server"]
