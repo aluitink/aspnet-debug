@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aspnet-debug.Shared", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aspnet-debug.Client", "src\aspnet-debug.Client\aspnet-debug.Client.csproj", "{D675366B-DD80-484A-A1F7-91DA9A4A26A2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aspnet-debug.Extension", "src\aspnet-debug.Extension\aspnet-debug.Extension.csproj", "{98F637D4-C1CE-45CF-B480-48F8E6C58B56}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,10 @@ Global
 		{D675366B-DD80-484A-A1F7-91DA9A4A26A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D675366B-DD80-484A-A1F7-91DA9A4A26A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D675366B-DD80-484A-A1F7-91DA9A4A26A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98F637D4-C1CE-45CF-B480-48F8E6C58B56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98F637D4-C1CE-45CF-B480-48F8E6C58B56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98F637D4-C1CE-45CF-B480-48F8E6C58B56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98F637D4-C1CE-45CF-B480-48F8E6C58B56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,5 +50,6 @@ Global
 		{1F86436F-72D3-480F-B0F2-613F3237AF83} = {BA167420-6D20-46E2-B6D8-00404A68BF20}
 		{D0F1D8F6-9DFD-47CD-9AD9-D8DFE0B3B4A0} = {BA167420-6D20-46E2-B6D8-00404A68BF20}
 		{D675366B-DD80-484A-A1F7-91DA9A4A26A2} = {BA167420-6D20-46E2-B6D8-00404A68BF20}
+		{98F637D4-C1CE-45CF-B480-48F8E6C58B56} = {BA167420-6D20-46E2-B6D8-00404A68BF20}
 	EndGlobalSection
 EndGlobal

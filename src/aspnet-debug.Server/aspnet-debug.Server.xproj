@@ -15,7 +15,6 @@
     <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\aspnet-debug.Shared\aspnet-debug.Shared.csproj" />
     <ProjectReference Include="..\aspnet-debug.Shared\aspnet-debug.Shared.csproj" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\DNX\Microsoft.DNX.targets" Condition="'$(VSToolsPath)' != ''" />

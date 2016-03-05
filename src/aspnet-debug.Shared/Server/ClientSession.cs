@@ -1,11 +1,13 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
+using aspnet_debug.Shared.Communication;
 using aspnet_debug.Shared.Logging;
 using log4net;
 
 namespace aspnet_debug.Shared.Server
 {
+    //Used by the server
     public class ClientSession
     {
         private readonly ILog _logger = Log.GetLogger(typeof (ClientSession));

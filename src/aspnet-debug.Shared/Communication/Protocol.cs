@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using aspnet_debug.Shared.Logging;
 using log4net;
 
-namespace aspnet_debug.Shared.Server
+namespace aspnet_debug.Shared.Communication
 {
     public class Protocol
     {
@@ -43,7 +43,7 @@ namespace aspnet_debug.Shared.Server
         public MessageBase Receive()
         {
             var buffer = new byte[sizeof (int)];
-            int received = _socket.Receive(buffer);
+            _socket.Receive(buffer);
             int length = BitConverter.ToInt32(buffer, 0);
             return ReceiveContent(length);
         }
