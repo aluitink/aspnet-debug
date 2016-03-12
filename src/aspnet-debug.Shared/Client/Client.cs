@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Sockets;
+using aspnet_debug.Shared.Communication;
 
 namespace aspnet_debug.Shared.Client
 {
@@ -12,6 +13,11 @@ namespace aspnet_debug.Shared.Client
         {
             _tcpClient.Connect(IPAddress.Parse(host), port);
             _serverSession = new ServerSession(_tcpClient.Client);
+        }
+
+        public void Send(MessageBase message)
+        {
+            _serverSession.Send(message.Command, message);
         }
     }
 }

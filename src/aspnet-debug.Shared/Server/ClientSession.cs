@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Net.Sockets;
 using aspnet_debug.Shared.Communication;
@@ -32,7 +34,18 @@ namespace aspnet_debug.Shared.Server
                     switch (message.Command)
                     {
                         case Command.DebugContent:
-                            _logger.Debug("DebugContent Received");
+                            ExecutionParameters parameters = message as ExecutionParameters;
+
+                            if (parameters != null)
+                            {
+                                _logger.Debug("DebugContent Received");
+
+                                var tempSolutionPath = Path.Combine(Path.GetTempPath(), "Solution.zip");
+                                File.WriteAllBytes(tempSolutionPath, (byte[])parameters.Payload);
+                                _logger.DebugFormat("Extracting to {0}", Directory.GetCurrentDirectory());
+                                ZipFile.ExtractToDirectory(tempSolutionPath, Directory.GetCurrentDirectory());
+                            }
+                            
                             break;
                         case Command.Started:
                             _logger.Debug("Started");

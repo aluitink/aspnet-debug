@@ -5,11 +5,20 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Globalization;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using aspnet_debug.Extension.Views;
+using aspnet_debug.Shared.Communication;
+using aspnet_debug.Shared.Server;
 using EnvDTE;
+using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Command = aspnet_debug.Shared.Communication.Command;
 
 namespace aspnet_debug.Extension
 {
@@ -102,16 +111,44 @@ namespace aspnet_debug.Extension
         /// <param name="e">Event args.</param>
         private void MenuItemCallback(object sender, EventArgs e)
         {
-            DTE dte = this.ServiceProvider.GetService(typeof (DTE)) as DTE;
+            GetActiveIde().ExecuteCommand("File.SaveAll");
 
-            if (dte != null)
+            var projects = GetProjects().Select(p => new ProjectDefinition() { Name = p.Name, Path = p.UniqueName}).ToList();
+
+            var viewModel = new ProjectSelectorViewModel();
+            viewModel.Projects = projects;
+
+            DebugDefinition debugDefinition = null;
+            using (ProjectSelector ps = new ProjectSelector(viewModel))
             {
-                SolutionProvider solutionProvider = new SolutionProvider(dte);
-
-                var solution = solutionProvider.GetOpenSolution();
+                if (ps.ShowDialog().GetValueOrDefault(false))
+                {
+                    debugDefinition = ps.DebugDefinition;
+                }
             }
 
-            
+
+            if (debugDefinition != null)
+            {
+                var solution = GetSolution();
+                var tempFile = Path.Combine(Path.GetTempPath(), string.Format("{0}.zip", solution.FileName));
+                //Test Endpoint
+                //Package Solution
+                ZipFile.CreateFromDirectory(solution.FullName, tempFile);
+                ExecutionParameters parameters = new ExecutionParameters();
+                parameters.Command = Command.DebugContent;
+                parameters.ProjectPath = debugDefinition.Project.Path;
+                parameters.ExecutionCommand = debugDefinition.Command;
+                parameters.Payload = File.ReadAllBytes(tempFile);
+
+                Shared.Client.Client client = new Shared.Client.Client(debugDefinition.Endpoint, Server.ServicePort);
+
+                client.Send(parameters);
+
+                //Transmit Package
+
+
+            }
 
             //string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
             //string title = "AttachDebuggerCommand";
@@ -124,6 +161,68 @@ namespace aspnet_debug.Extension
             //    OLEMSGICON.OLEMSGICON_INFO,
             //    OLEMSGBUTTON.OLEMSGBUTTON_OK,
             //    OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+        }
+
+        private DTE2 GetActiveIde()
+        {
+            // Get an instance of currently running Visual Studio IDE.
+            DTE2 dte2 = Package.GetGlobalService(typeof(DTE)) as DTE2;
+            return dte2;
+        }
+
+        private IList<EnvDTE.Project> GetProjects()
+        {
+            Projects projects = GetActiveIde().Solution.Projects;
+            List<EnvDTE.Project> list = new List<EnvDTE.Project>();
+            var item = projects.GetEnumerator();
+            while (item.MoveNext())
+            {
+                var project = item.Current as EnvDTE.Project;
+                if (project == null)
+                {
+                    continue;
+                }
+
+                if (project.Kind == ProjectKinds.vsProjectKindSolutionFolder)
+                {
+                    list.AddRange(GetSolutionFolderProjects(project));
+                }
+                else
+                {
+                    list.Add(project);
+                }
+            }
+
+            return list;
+        }
+
+        private EnvDTE.Solution GetSolution()
+        {
+            return GetActiveIde().Solution;
+        }
+
+        private IEnumerable<EnvDTE.Project> GetSolutionFolderProjects(EnvDTE.Project solutionFolder)
+        {
+            List<EnvDTE.Project> list = new List<EnvDTE.Project>();
+            for (var i = 1; i <= solutionFolder.ProjectItems.Count; i++)
+            {
+                var subProject = solutionFolder.ProjectItems.Item(i).SubProject;
+                if (subProject == null)
+                {
+                    continue;
+                }
+
+                // If this is another solution folder, do a recursive call, otherwise add
+                if (subProject.Kind == ProjectKinds.vsProjectKindSolutionFolder)
+                {
+                    list.AddRange(GetSolutionFolderProjects(subProject));
+                }
+                else
+                {
+                    list.Add(subProject);
+                }
+            }
+            return list;
         }
     }
 }

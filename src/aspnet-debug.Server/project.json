@@ -21,6 +21,10 @@
     "dnx451": {
       "dependencies": {
         "aspnet-debug.Shared": "1.0.0-*"
+      },
+      "frameworkAssemblies": {
+        "System.IO.Compression": "4.0.0.0",
+        "System.IO.Compression.FileSystem": "4.0.0.0"
       }
     }
   }
