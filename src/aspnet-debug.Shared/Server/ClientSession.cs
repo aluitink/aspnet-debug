@@ -43,8 +43,34 @@ namespace aspnet_debug.Shared.Server
 
                                 var tempSolutionPath = Path.Combine(Path.GetTempPath(), "Solution.zip");
                                 File.WriteAllBytes(tempSolutionPath, (byte[])parameters.Payload);
-                                _logger.DebugFormat("Extracting to {0}", Directory.GetCurrentDirectory());
-                                ZipFile.ExtractToDirectory(tempSolutionPath, Directory.GetCurrentDirectory());
+
+                                var tempPath = Path.GetTempPath();
+                                var solutionPath = Path.Combine(tempPath, "solution");
+
+                                if (Directory.Exists(solutionPath))
+                                    Directory.Delete(solutionPath);
+
+                                Directory.CreateDirectory(solutionPath);
+                                _logger.DebugFormat("Extracting to {0}", solutionPath);
+
+                                //@@@ Needs work.. POC.
+                                using (ZipArchive zip = ZipFile.OpenRead(tempSolutionPath))
+                                {
+                                    foreach (ZipArchiveEntry zipArchiveEntry in zip.Entries)
+                                    {
+                                        var path = zipArchiveEntry.FullName;
+                                        var filePath = Path.Combine(solutionPath, path);
+                                        filePath = filePath.Replace('\\', Path.DirectorySeparatorChar);
+
+                                        var directoryPath = Path.GetDirectoryName(filePath);
+                                        if(directoryPath != null)
+                                            Directory.CreateDirectory(directoryPath);
+
+                                        var fileName = Path.GetFileName(filePath);
+                                        if(!string.IsNullOrWhiteSpace(fileName))
+                                            zipArchiveEntry.ExtractToFile(filePath, true);
+                                    }
+                                }
                             }
                             
                             break;
