@@ -131,10 +131,10 @@ namespace aspnet_debug.Extension
             if (debugDefinition != null)
             {
                 var solution = GetSolution();
-                var tempFile = Path.Combine(Path.GetTempPath(), string.Format("{0}.zip", solution.FileName));
+                var tempFile = Path.Combine(Path.GetTempPath(), string.Format("{0}.zip", Path.GetFileName(solution.FileName)));
                 //Test Endpoint
                 //Package Solution
-                ZipFile.CreateFromDirectory(solution.FullName, tempFile);
+                ZipFile.CreateFromDirectory(Path.GetDirectoryName(solution.FullName), tempFile);
                 ExecutionParameters parameters = new ExecutionParameters();
                 parameters.Command = Command.DebugContent;
                 parameters.ProjectPath = debugDefinition.Project.Path;

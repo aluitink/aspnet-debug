@@ -34,11 +34,12 @@ namespace aspnet_debug.Shared.Server
                     switch (message.Command)
                     {
                         case Command.DebugContent:
+                            _logger.Debug("DebugContent Received");
                             ExecutionParameters parameters = message as ExecutionParameters;
 
                             if (parameters != null)
                             {
-                                _logger.Debug("DebugContent Received");
+                                _logger.Debug("ExecutionParameters resolved");
 
                                 var tempSolutionPath = Path.Combine(Path.GetTempPath(), "Solution.zip");
                                 File.WriteAllBytes(tempSolutionPath, (byte[])parameters.Payload);

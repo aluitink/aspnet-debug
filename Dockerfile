@@ -7,7 +7,7 @@ COPY global.json /opt/aspnet-debug/global.json
 COPY wrap /opt/aspnet-debug/wrap
 
 COPY src/aspnet-debug.Shared /opt/aspnet-debug/src/aspnet-debug.Shared
-RUN ["mono", "/opt/aspnet-debug/.nuget/NuGet.exe", "restore", "/opt/aspnet-debug/src/aspnet-debug.Shared/packages.config", "-OutputDirectory", "/opt/aspnet-debug/src/packages"]
+RUN ["mono", "/opt/aspnet-debug/.nuget/NuGet.exe", "restore", "/opt/aspnet-debug/src/aspnet-debug.Shared/packages.config", "-OutputDirectory", "/opt/aspnet-debug/packages"]
 
 WORKDIR /opt/aspnet-debug/src/aspnet-debug.Shared
 RUN ["xbuild", "/p:Configuration=Debug", "/noconsolelogger", "/nologo", "aspnet-debug.Shared.csproj"]

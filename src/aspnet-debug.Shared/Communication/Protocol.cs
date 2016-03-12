@@ -82,6 +82,17 @@ namespace aspnet_debug.Shared.Communication
             }
         }
 
+        public void Send(MessageBase message)
+        {
+            using (var ms = new MemoryStream())
+            {
+                _serializer.WriteObject(ms, message);
+                byte[] buffer = ms.ToArray();
+                _socket.Send(BitConverter.GetBytes(buffer.Length));
+                _socket.Send(buffer);
+            }
+        }
+
         public void Disconnect()
         {
             if (_socket != null)

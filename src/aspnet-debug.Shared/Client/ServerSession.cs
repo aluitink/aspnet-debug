@@ -13,11 +13,11 @@ namespace aspnet_debug.Shared.Client
             _protocol = new Protocol(socket);
         }
         
-        public void Send(Command command, object payload)
+        public void Send(MessageBase message)
         {
-            _protocol.Send(command, payload);
+            _protocol.Send(message);
         }
-
+        
         public MessageBase Receive()
         {
             return _protocol.Receive();

@@ -17,7 +17,7 @@ namespace aspnet_debug.Shared.Client
 
         public void Send(MessageBase message)
         {
-            _serverSession.Send(message.Command, message);
+            _serverSession.Send(message);
         }
     }
 }
