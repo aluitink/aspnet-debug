@@ -87,17 +87,17 @@ namespace aspnet_debug.Shared.Server
                                 process.StartInfo = startInfo;
                                 process.OutputDataReceived += (sender, args) =>
                                 {
-                                    Console.WriteLine(args.Data);
+                                    _logger.DebugFormat(args.Data);
                                     stringBuilder.Append(args.Data);
                                 };
                                 process.Start();
 
-                                Console.WriteLine("Process running: {0}", !process.HasExited);
+                                _logger.DebugFormat("Process running: {0}", !process.HasExited);
 
                                 process.WaitForExit();
 
-                                Console.WriteLine("DNX");
-                                Console.WriteLine(stringBuilder.ToString());
+                                _logger.DebugFormat("DNX");
+                                _logger.DebugFormat(stringBuilder.ToString());
                             }
 
                             break;
