@@ -132,6 +132,10 @@ namespace aspnet_debug.Extension
             {
                 var solution = GetSolution();
                 var tempFile = Path.Combine(Path.GetTempPath(), string.Format("{0}.zip", Path.GetFileName(solution.FileName)));
+                
+                if(File.Exists(tempFile))
+                    File.Delete(tempFile);
+
                 //Test Endpoint
                 //Package Solution
                 ZipFile.CreateFromDirectory(Path.GetDirectoryName(solution.FullName), tempFile);
