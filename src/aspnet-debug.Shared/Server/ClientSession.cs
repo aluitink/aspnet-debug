@@ -81,7 +81,7 @@ namespace aspnet_debug.Shared.Server
                                 startInfo.WindowStyle = ProcessWindowStyle.Hidden;
                                 startInfo.FileName = "/bin/bash";
                                 startInfo.Arguments = String.Format("-c {0}", command);
-                                startInfo.WorkingDirectory = Path.Combine(solutionPath, parameters.ProjectPath);
+                                startInfo.WorkingDirectory = Path.Combine(solutionPath, parameters.ProjectPath.Replace('\\', Path.DirectorySeparatorChar));
                                 startInfo.RedirectStandardOutput = true;
                                 startInfo.RedirectStandardError = true;
                                 
