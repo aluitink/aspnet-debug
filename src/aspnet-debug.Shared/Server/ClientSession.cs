@@ -85,7 +85,7 @@ namespace aspnet_debug.Shared.Server
                                 startInfo.UseShellExecute = false;
                                 startInfo.WindowStyle = ProcessWindowStyle.Hidden;
                                 startInfo.FileName = "/bin/bash";
-                                startInfo.Arguments = String.Format("-c {0}", command);
+                                startInfo.Arguments = String.Format("-c cd ${{PWD}} && {0}", command);
                                 startInfo.WorkingDirectory = Path.Combine(solutionPath, projectDirectory);
                                 startInfo.RedirectStandardOutput = true;
                                 startInfo.RedirectStandardError = true;
