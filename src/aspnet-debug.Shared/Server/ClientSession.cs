@@ -50,7 +50,7 @@ namespace aspnet_debug.Shared.Server
                                 var solutionPath = Path.Combine(tempPath, "solution");
 
                                 if (Directory.Exists(solutionPath))
-                                    Directory.Delete(solutionPath);
+                                    Directory.Delete(solutionPath, true);
 
                                 Directory.CreateDirectory(solutionPath);
                                 _logger.DebugFormat("Extracting to {0}", solutionPath);
@@ -82,6 +82,7 @@ namespace aspnet_debug.Shared.Server
                                 StringBuilder stringBuilder = new StringBuilder();
                                 Process process = new Process();
                                 ProcessStartInfo startInfo = new ProcessStartInfo();
+                                startInfo.UseShellExecute = false;
                                 startInfo.WindowStyle = ProcessWindowStyle.Hidden;
                                 startInfo.FileName = "/bin/bash";
                                 startInfo.Arguments = String.Format("-c {0}", command);
@@ -124,8 +125,9 @@ namespace aspnet_debug.Shared.Server
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.ErrorFormat(e.ToString());
                 throw;
             }
             finally

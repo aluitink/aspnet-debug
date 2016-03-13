@@ -24,6 +24,9 @@ namespace aspnet_debug.Client
             Shared.Client.Client client = new Shared.Client.Client("127.0.0.1", Server.ServicePort);
             
             ExecutionParameters parameters = new ExecutionParameters();
+            parameters.ExecutionCommand = "dnx run";
+            parameters.Command = Command.DebugContent;
+            parameters.ProjectPath = "src\\ConsoleApp1\\ConsoleApp1.xproj";
             parameters.Payload = File.ReadAllBytes("ClassLibrary1.sln.zip");
 
             client.Send(parameters);
