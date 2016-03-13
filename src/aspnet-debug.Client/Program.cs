@@ -21,7 +21,7 @@ namespace aspnet_debug.Client
             Console.WriteLine("Press Enter to continue..");
             Console.ReadLine();
 
-            Shared.Client.Client client = new Shared.Client.Client("127.0.0.1", Server.ServicePort);
+            Shared.Client.Client client = new Shared.Client.Client("192.168.1.15", Server.ServicePort);
             
             ExecutionParameters parameters = new ExecutionParameters();
             parameters.ExecutionCommand = "dnx run";

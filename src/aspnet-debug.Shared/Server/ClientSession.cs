@@ -102,7 +102,6 @@ namespace aspnet_debug.Shared.Server
                                 };
                                 _logger.DebugFormat("startInfo.WorkingDirectory: {0}", startInfo.WorkingDirectory);
                                 _logger.DebugFormat("Running Command: {0}", command);
-                                _logger.DebugFormat("Process: {0}", process.ToString());
                                 process.Start();
 
                                 _logger.DebugFormat("Process running: {0}", !process.HasExited);
