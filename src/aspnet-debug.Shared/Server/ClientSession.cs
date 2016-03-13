@@ -1,8 +1,10 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using aspnet_debug.Shared.Communication;
 using aspnet_debug.Shared.Logging;
 using log4net;
@@ -42,7 +44,7 @@ namespace aspnet_debug.Shared.Server
                                 _logger.Debug("ExecutionParameters resolved");
 
                                 var tempSolutionPath = Path.Combine(Path.GetTempPath(), "Solution.zip");
-                                File.WriteAllBytes(tempSolutionPath, (byte[])parameters.Payload);
+                                File.WriteAllBytes(tempSolutionPath, (byte[]) parameters.Payload);
 
                                 var tempPath = Path.GetTempPath();
                                 var solutionPath = Path.Combine(tempPath, "solution");
@@ -63,16 +65,38 @@ namespace aspnet_debug.Shared.Server
                                         filePath = filePath.Replace('\\', Path.DirectorySeparatorChar);
 
                                         var directoryPath = Path.GetDirectoryName(filePath);
-                                        if(directoryPath != null)
+                                        if (directoryPath != null)
                                             Directory.CreateDirectory(directoryPath);
 
                                         var fileName = Path.GetFileName(filePath);
-                                        if(!string.IsNullOrWhiteSpace(fileName))
+                                        if (!string.IsNullOrWhiteSpace(fileName))
                                             zipArchiveEntry.ExtractToFile(filePath, true);
                                     }
                                 }
+
+                                string command = parameters.ExecutionCommand;
+                                StringBuilder stringBuilder = new StringBuilder();
+                                Process process = new Process();
+                                ProcessStartInfo startInfo = new ProcessStartInfo();
+                                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                                startInfo.FileName = "/bin/bash";
+                                startInfo.Arguments = String.Format("-c {0}", command);
+                                startInfo.WorkingDirectory = Path.Combine(solutionPath, parameters.ProjectPath);
+                                startInfo.RedirectStandardOutput = true;
+
+                                process.StartInfo = startInfo;
+                                process.OutputDataReceived += (sender, args) =>
+                                {
+                                    stringBuilder.Append(args.Data);
+                                };
+                                process.Start();
+
+                                process.WaitForExit();
+
+                                Console.WriteLine("DNX");
+                                Console.WriteLine(stringBuilder.ToString());
                             }
-                            
+
                             break;
                         case Command.Started:
                             _logger.Debug("Started");
