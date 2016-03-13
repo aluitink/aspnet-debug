@@ -74,6 +74,10 @@ namespace aspnet_debug.Shared.Server
                                     }
                                 }
 
+                                var projectPath = parameters.ProjectPath.Replace('\\', Path.DirectorySeparatorChar);
+
+                                var projectDirectory = Path.GetDirectoryName(projectPath);
+
                                 string command = parameters.ExecutionCommand;
                                 StringBuilder stringBuilder = new StringBuilder();
                                 Process process = new Process();
@@ -81,7 +85,7 @@ namespace aspnet_debug.Shared.Server
                                 startInfo.WindowStyle = ProcessWindowStyle.Hidden;
                                 startInfo.FileName = "/bin/bash";
                                 startInfo.Arguments = String.Format("-c {0}", command);
-                                startInfo.WorkingDirectory = Path.Combine(solutionPath, parameters.ProjectPath.Replace('\\', Path.DirectorySeparatorChar));
+                                startInfo.WorkingDirectory = Path.Combine(solutionPath, projectDirectory);
                                 startInfo.RedirectStandardOutput = true;
                                 startInfo.RedirectStandardError = true;
                                 
