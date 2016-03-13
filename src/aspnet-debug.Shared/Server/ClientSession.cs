@@ -82,13 +82,13 @@ namespace aspnet_debug.Shared.Server
                                 StringBuilder stringBuilder = new StringBuilder();
                                 Process process = new Process();
                                 ProcessStartInfo startInfo = new ProcessStartInfo();
-                                startInfo.UseShellExecute = false;
+                                startInfo.UseShellExecute = true;
                                 startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                                startInfo.FileName = "/bin/bash";
-                                startInfo.Arguments = String.Format("-c cd ${{PWD}} && {0}", command);
+                                startInfo.FileName = "dnx";
+                                startInfo.Arguments = command;
                                 startInfo.WorkingDirectory = Path.Combine(solutionPath, projectDirectory);
-                                startInfo.RedirectStandardOutput = true;
-                                startInfo.RedirectStandardError = true;
+                                //startInfo.RedirectStandardOutput = true;
+                                //startInfo.RedirectStandardError = true;
                                 
                                 process.StartInfo = startInfo;
 
@@ -100,6 +100,11 @@ namespace aspnet_debug.Shared.Server
                                 {
                                     _logger.ErrorFormat(args.Data);
                                 };
+                                process.Exited += (sender, args) =>
+                                {
+                                    _logger.DebugFormat("Process has exited - {0}", args.ToString());
+                                };
+
                                 _logger.DebugFormat("startInfo.WorkingDirectory: {0}", startInfo.WorkingDirectory);
                                 _logger.DebugFormat("Running Command: {0}", command);
                                 process.Start();
