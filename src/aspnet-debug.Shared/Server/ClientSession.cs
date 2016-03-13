@@ -83,13 +83,21 @@ namespace aspnet_debug.Shared.Server
                                 startInfo.Arguments = String.Format("-c {0}", command);
                                 startInfo.WorkingDirectory = Path.Combine(solutionPath, parameters.ProjectPath);
                                 startInfo.RedirectStandardOutput = true;
-
+                                startInfo.RedirectStandardError = true;
+                                
                                 process.StartInfo = startInfo;
+
                                 process.OutputDataReceived += (sender, args) =>
                                 {
                                     _logger.DebugFormat(args.Data);
-                                    stringBuilder.Append(args.Data);
                                 };
+                                process.ErrorDataReceived += (sender, args) =>
+                                {
+                                    _logger.ErrorFormat(args.Data);
+                                };
+
+                                _logger.DebugFormat("Running Command: {0}", command);
+                                _logger.DebugFormat(process.ToString());
                                 process.Start();
 
                                 _logger.DebugFormat("Process running: {0}", !process.HasExited);
