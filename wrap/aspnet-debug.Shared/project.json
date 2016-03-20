@@ -8,7 +8,7 @@
         "pdb": "../../src/aspnet-debug.Shared/obj/{configuration}/aspnet-debug.Shared.pdb"
       },
       "dependencies": {
-        "log4net": "2.0.5"
+        "log4net": "2.0.4"
       }
     }
   }

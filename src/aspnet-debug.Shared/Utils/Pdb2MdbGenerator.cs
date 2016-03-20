@@ -17,23 +17,21 @@ namespace aspnet_debug.Shared.Utils
         {
             _logger.DebugFormat("Directory: {0}", directoryName);
             IEnumerable<string> files =
-                Directory.GetFiles(directoryName, "*.dll")
-                    .Concat(Directory.GetFiles(directoryName, "*.exe"))
+                Directory.GetFiles(directoryName, "*.pdb")
                     .Where(x => !x.Contains("vshost"));
+
             _logger.DebugFormat("Files: {0}", files.Count());
 
             var dirInfo = new DirectoryInfo(directoryName);
 
-            Parallel.ForEach(files, file =>
+            Parallel.ForEach(files, pdbFile =>
             {
                 try
                 {
-                    string fileNameWithoutExt = Path.GetFileNameWithoutExtension(file);
-                    string pdbFile = Path.Combine(Path.GetDirectoryName(file), fileNameWithoutExt + ".pdb");
                     if (File.Exists(pdbFile))
                     {
-                        _logger.DebugFormat("Generate mdp for: {0}", file);
-                        var procInfo = new ProcessStartInfo(MonoUtils.GetPdb2MdbPath(), Path.GetFileName(file));
+                        _logger.DebugFormat("Generate mdp for: {0}", pdbFile);
+                        var procInfo = new ProcessStartInfo(MonoUtils.GetPdb2MdbPath(), Path.GetFileName(pdbFile));
                         procInfo.WorkingDirectory = dirInfo.FullName;
                         procInfo.UseShellExecute = false;
                         procInfo.CreateNoWindow = true;
@@ -43,7 +41,7 @@ namespace aspnet_debug.Shared.Utils
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error("Failed to generate mdp for " + file, ex);
+                    _logger.Error("Failed to generate mdp for " + pdbFile, ex);
                 }
             });
 
