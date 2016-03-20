@@ -91,6 +91,7 @@ namespace aspnet_debug.Shared.Server
 
                                 BuildMdbs(Path.Combine(dir));
 
+                                Environment.SetEnvironmentVariable("MONO_OPTIONS", "--debugger-agent=address=0.0.0.0:11000,transport=dt_socket,server=y --debug=mdb-optimizations");
 
                                 string command = parameters.ExecutionCommand;
                                 StringBuilder stringBuilder = new StringBuilder();

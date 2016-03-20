@@ -63,7 +63,7 @@ COPY src/aspnet-debug.Server /opt/aspnet-debug/src/aspnet-debug.Server
 # Supervisor
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-EXPOSE 13001
+EXPOSE 13001 11000
 
 #CMD ["/usr/bin/supervisord"]
 CMD ["dnx", "-p", "project.json", "--configuration", "Debug", "aspnet_debug.Server"]
