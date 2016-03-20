@@ -155,12 +155,15 @@ namespace aspnet_debug.Shared.Server
 
         private void BuildMdbs(string pdbPath)
         {
+            _logger.DebugFormat("Entering BuildMdbs(\"{0}\")", pdbPath);
             var generator = new Pdb2MdbGenerator();
             generator.GeneratePdb2Mdb(pdbPath);
         }
 
         private void BuildPdbs(string projectDirectory)
         {
+            _logger.DebugFormat("Entering BuildPdbs(\"{0}\")", projectDirectory);
+            _logger.DebugFormat("Setting environment variable: {0}", "DNX_BUILD_PORTABLE_PDB");
             Environment.SetEnvironmentVariable("DNX_BUILD_PORTABLE_PDB", true.ToString());
 
             string command = string.Format("build");
@@ -177,18 +180,18 @@ namespace aspnet_debug.Shared.Server
             //startInfo.RedirectStandardError = true;
 
             process.StartInfo = startInfo;
-
+            var procTag = string.Format("[{0} {1}]:", startInfo.FileName, startInfo.Arguments);
             process.OutputDataReceived += (sender, args) =>
             {
-                _logger.DebugFormat(args.Data);
+                _logger.DebugFormat("{0}{1}", procTag, args.Data);
             };
             process.ErrorDataReceived += (sender, args) =>
             {
-                _logger.ErrorFormat(args.Data);
+                _logger.ErrorFormat("{0}{1}", procTag, args.Data);
             };
             process.Exited += (sender, args) =>
             {
-                _logger.DebugFormat("Process has exited - {0}", args.ToString());
+                _logger.DebugFormat("{0}Process has exited - {1}", procTag, args.ToString());
             };
 
             _logger.DebugFormat("startInfo.WorkingDirectory: {0}", startInfo.WorkingDirectory);
@@ -201,7 +204,6 @@ namespace aspnet_debug.Shared.Server
 
             _logger.DebugFormat("-DNX-");
             _logger.DebugFormat(stringBuilder.ToString());
-
         }
     }
 }

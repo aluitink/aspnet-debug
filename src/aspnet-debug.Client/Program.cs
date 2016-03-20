@@ -21,13 +21,13 @@ namespace aspnet_debug.Client
             Console.WriteLine("Press Enter to continue..");
             Console.ReadLine();
 
-            Shared.Client.Client client = new Shared.Client.Client("192.168.1.15", Server.ServicePort);
+            Shared.Client.Client client = new Shared.Client.Client("127.0.0.1", Server.ServicePort);
             
             ExecutionParameters parameters = new ExecutionParameters();
-            parameters.ExecutionCommand = "dnx run";
+            parameters.ExecutionCommand = "run";
             parameters.Command = Command.DebugContent;
-            parameters.ProjectPath = "src\\ConsoleApp1\\ConsoleApp1.xproj";
-            parameters.Payload = File.ReadAllBytes("ClassLibrary1.sln.zip");
+            parameters.ProjectPath = "src\\helloWorld.Console\\helloWorld.Console.xproj";
+            parameters.Payload = File.ReadAllBytes("helloWorld.zip");
 
             client.Send(parameters);
             

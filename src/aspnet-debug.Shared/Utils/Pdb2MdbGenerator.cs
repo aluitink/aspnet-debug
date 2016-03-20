@@ -17,7 +17,7 @@ namespace aspnet_debug.Shared.Utils
         {
             _logger.DebugFormat("Directory: {0}", directoryName);
             IEnumerable<string> files =
-                Directory.GetFiles(directoryName, "*.pdb")
+                Directory.GetFiles(directoryName, "*.pdb", SearchOption.AllDirectories)
                     .Where(x => !x.Contains("vshost"));
 
             _logger.DebugFormat("Files: {0}", files.Count());
