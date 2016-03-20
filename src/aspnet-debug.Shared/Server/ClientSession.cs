@@ -80,21 +80,13 @@ namespace aspnet_debug.Shared.Server
                                 var projectDirectory = Path.GetDirectoryName(projectPath);
 
                                 var dir = Path.Combine(solutionPath, projectDirectory);
-
-                                var temp = Path.GetTempPath();
-                                var aspnetDebugPath = Path.Combine(temp, "aspnet-debug");
-                                if (!Directory.Exists(aspnetDebugPath))
-                                    Directory.CreateDirectory(aspnetDebugPath);
                                 
                                 BuildPdbs(dir);
-
-
                                 BuildMdbs(Path.Combine(dir));
 
                                 Environment.SetEnvironmentVariable("MONO_OPTIONS", "--debugger-agent=address=0.0.0.0:11000,transport=dt_socket,server=y --debug=mdb-optimizations");
 
                                 string command = parameters.ExecutionCommand;
-                                StringBuilder stringBuilder = new StringBuilder();
                                 Process process = new Process();
                                 ProcessStartInfo startInfo = new ProcessStartInfo();
                                 startInfo.UseShellExecute = true;
@@ -117,7 +109,7 @@ namespace aspnet_debug.Shared.Server
                                 };
                                 process.Exited += (sender, args) =>
                                 {
-                                    _logger.DebugFormat("Process has exited - {0}", args.ToString());
+                                    _logger.DebugFormat("Process has exited");
                                 };
 
                                 _logger.DebugFormat("startInfo.WorkingDirectory: {0}", startInfo.WorkingDirectory);
@@ -127,9 +119,6 @@ namespace aspnet_debug.Shared.Server
                                 _logger.DebugFormat("Process running: {0}", !process.HasExited);
 
                                 process.WaitForExit();
-
-                                _logger.DebugFormat("-DNX-");
-                                _logger.DebugFormat(stringBuilder.ToString());
                             }
 
                             break;
@@ -168,8 +157,7 @@ namespace aspnet_debug.Shared.Server
             Environment.SetEnvironmentVariable("DNX_BUILD_PORTABLE_PDB", true.ToString());
 
             string command = string.Format("build");
-
-            StringBuilder stringBuilder = new StringBuilder();
+            
             Process process = new Process();
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.UseShellExecute = true;
@@ -192,7 +180,7 @@ namespace aspnet_debug.Shared.Server
             };
             process.Exited += (sender, args) =>
             {
-                _logger.DebugFormat("{0}Process has exited - {1}", procTag, args.ToString());
+                _logger.DebugFormat("{0}Process has exited", procTag);
             };
 
             _logger.DebugFormat("startInfo.WorkingDirectory: {0}", startInfo.WorkingDirectory);
@@ -202,9 +190,6 @@ namespace aspnet_debug.Shared.Server
             _logger.DebugFormat("Process running: {0}", !process.HasExited);
 
             process.WaitForExit();
-
-            _logger.DebugFormat("-DNX-");
-            _logger.DebugFormat(stringBuilder.ToString());
         }
     }
 }

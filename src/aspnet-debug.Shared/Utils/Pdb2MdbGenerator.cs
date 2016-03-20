@@ -17,31 +17,39 @@ namespace aspnet_debug.Shared.Utils
         {
             _logger.DebugFormat("Directory: {0}", directoryName);
             IEnumerable<string> files =
-                Directory.GetFiles(directoryName, "*.pdb", SearchOption.AllDirectories)
+                Directory.GetFiles(directoryName, "*.dll", SearchOption.AllDirectories)
+                    .Concat(Directory.GetFiles(directoryName, "*.exe"))
                     .Where(x => !x.Contains("vshost"));
 
             _logger.DebugFormat("Files: {0}", files.Count());
 
-            var dirInfo = new DirectoryInfo(directoryName);
+            
 
-            Parallel.ForEach(files, pdbFile =>
+            Parallel.ForEach(files, file =>
             {
                 try
                 {
-                    if (File.Exists(pdbFile))
+                    var dir = Path.GetDirectoryName(file);
+                    _logger.DebugFormat("dir: {0}", dir);
+                    var dirInfo = new DirectoryInfo(dir);
+                    if (File.Exists(file))
                     {
-                        _logger.DebugFormat("Generate mdp for: {0}", pdbFile);
-                        var procInfo = new ProcessStartInfo(MonoUtils.GetPdb2MdbPath(), Path.GetFileName(pdbFile));
+                        _logger.DebugFormat("Generate mdp for: {0}", file);
+                        var procInfo = new ProcessStartInfo(MonoUtils.GetPdb2MdbPath(), Path.GetFileName(file));
                         procInfo.WorkingDirectory = dirInfo.FullName;
                         procInfo.UseShellExecute = false;
                         procInfo.CreateNoWindow = true;
                         Process proc = Process.Start(procInfo);
                         proc.WaitForExit();
                     }
+                    else
+                    {
+                        _logger.DebugFormat("No PDB for: {0}", file);
+                    }
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error("Failed to generate mdp for " + pdbFile, ex);
+                    _logger.Error("Failed to generate mdp for " + file, ex);
                 }
             });
 
