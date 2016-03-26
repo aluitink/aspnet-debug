@@ -192,6 +192,10 @@
     <Content Include="Resources\AttachDebuggerCommandPackage.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\aspnet-debug.Debugger\aspnet-debug.Debugger.csproj">
+      <Project>{EA6246F3-6E5A-4616-89D2-D44EBFE5CC6A}</Project>
+      <Name>aspnet-debug.Debugger</Name>
+    </ProjectReference>
     <ProjectReference Include="..\aspnet-debug.Shared\aspnet-debug.Shared.csproj">
       <Project>{D0F1D8F6-9DFD-47CD-9AD9-D8DFE0B3B4A0}</Project>
       <Name>aspnet-debug.Shared</Name>

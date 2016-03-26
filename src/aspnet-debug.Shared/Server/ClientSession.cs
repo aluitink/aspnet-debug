@@ -92,7 +92,7 @@ namespace aspnet_debug.Shared.Server
                                 startInfo.UseShellExecute = true;
                                 startInfo.WindowStyle = ProcessWindowStyle.Hidden;
                                 startInfo.FileName = "dnx";
-                                startInfo.Arguments = command;
+                                startInfo.Arguments = string.Format("{0} --framework dnx40", command);
                                 startInfo.WorkingDirectory = dir;
                                 //startInfo.RedirectStandardOutput = true;
                                 //startInfo.RedirectStandardError = true;
@@ -117,6 +117,8 @@ namespace aspnet_debug.Shared.Server
                                 process.Start();
 
                                 _logger.DebugFormat("Process running: {0}", !process.HasExited);
+
+                                _protocol.Send(Command.Started, null);
 
                                 process.WaitForExit();
                             }
@@ -157,7 +159,7 @@ namespace aspnet_debug.Shared.Server
             Environment.SetEnvironmentVariable("DNX_BUILD_PORTABLE_PDB", true.ToString());
 
             string command = string.Format("build");
-            
+
             Process process = new Process();
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.UseShellExecute = true;

@@ -11,6 +11,8 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime.InteropServices;
+using aspnet_debug.Debugger.VisualStudio;
 using aspnet_debug.Extension.Views;
 using aspnet_debug.Shared.Communication;
 using aspnet_debug.Shared.Server;
@@ -148,9 +150,39 @@ namespace aspnet_debug.Extension
                 Shared.Client.Client client = new Shared.Client.Client(debugDefinition.Endpoint, Server.ServicePort);
 
                 client.Send(parameters);
-
+                client.WaitForAnswer();
                 //Transmit Package
 
+                var dte = (DTE)Package.GetGlobalService(typeof(DTE));
+
+                IntPtr pInfo = GetDebugInfo(debugDefinition.Endpoint, debugDefinition.Project.Path, debugDefinition.Project.Path);
+                var sp = new ServiceProvider((Microsoft.VisualStudio.OLE.Interop.IServiceProvider)dte);
+                try
+                {
+                    var dbg = (IVsDebugger)sp.GetService(typeof(SVsShellDebugger));
+                    int hr = dbg.LaunchDebugTargets(1, pInfo);
+                    Marshal.ThrowExceptionForHR(hr);
+
+                    DebuggedProcess.Instance.AssociateDebugSession(client);
+                }
+                catch (Exception ex)
+                {
+                    //logger.Error(ex);
+                    string msg;
+                    var sh = (IVsUIShell)sp.GetService(typeof(SVsUIShell));
+                    sh.GetErrorInfo(out msg);
+
+                    if (!string.IsNullOrWhiteSpace(msg))
+                    {
+                        //logger.Error(msg);
+                    }
+                    throw;
+                }
+                finally
+                {
+                    if (pInfo != IntPtr.Zero)
+                        Marshal.FreeCoTaskMem(pInfo);
+                }
 
             }
 
@@ -165,6 +197,26 @@ namespace aspnet_debug.Extension
             //    OLEMSGICON.OLEMSGICON_INFO,
             //    OLEMSGBUTTON.OLEMSGBUTTON_OK,
             //    OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+        }
+
+        private IntPtr GetDebugInfo(string args, string targetExe, string outputDirectory)
+        {
+            var info = new VsDebugTargetInfo();
+            info.cbSize = (uint)Marshal.SizeOf(info);
+            info.dlo = DEBUG_LAUNCH_OPERATION.DLO_CreateProcess;
+
+            info.bstrExe = Path.Combine(outputDirectory, targetExe);
+            info.bstrCurDir = outputDirectory;
+            info.bstrArg = args; // no command line parameters
+            info.bstrRemoteMachine = null; // debug locally
+            info.grfLaunch = (uint)__VSDBGLAUNCHFLAGS.DBGLAUNCH_StopDebuggingOnEnd;
+            info.fSendStdoutToOutputWindow = 0;
+            info.clsidCustom = AD7Guids.EngineGuid;
+            info.grfLaunch = 0;
+
+            IntPtr pInfo = Marshal.AllocCoTaskMem((int)info.cbSize);
+            Marshal.StructureToPtr(info, pInfo, false);
+            return pInfo;
         }
 
         private DTE2 GetActiveIde()
