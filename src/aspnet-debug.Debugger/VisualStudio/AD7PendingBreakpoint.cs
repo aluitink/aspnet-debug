@@ -197,7 +197,7 @@ namespace aspnet_debug.Debugger.VisualStudio
             }
             catch(Exception ex)
             {
-                //logger.Trace($"Exception : {ex}");
+                Logger.Log($"Exception : {ex}");
             }
 
             breakpointLocation = null;

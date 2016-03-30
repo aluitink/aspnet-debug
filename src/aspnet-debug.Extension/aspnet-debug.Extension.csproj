@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="AttachDebuggerCommand.cs" />
     <Compile Include="AttachDebuggerCommandPackage.cs" />
+    <Compile Include="MonoDebuggerInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SolutionProvider.cs" />
     <Compile Include="Views\ProjectSelector.xaml.cs">

@@ -14,7 +14,7 @@ namespace aspnet_debug.Debugger
             if (mth.ReflectedType != null)
             {
                 string className = mth.ReflectedType.Name;
-                //logger.Trace(className + " (entering) :  " + callerMember);
+                Logger.Log(className + " (entering) :  " + callerMember);
             }
         }
     }

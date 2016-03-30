@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using aspnet_debug.Debugger.Contracts;
 using aspnet_debug.Debugger.DebugEngineHost;
 using aspnet_debug.Debugger.MIDebugEngine.Engine.Impl;
 using aspnet_debug.Shared.Client;
-using aspnet_debug.Shared.Server;
 using Microsoft.VisualStudio.Debugger.Interop;
 using MICore;
 using Mono.Debugger.Soft;
@@ -26,7 +23,7 @@ namespace aspnet_debug.Debugger.VisualStudio
                 return _engine;
             }
         }
-        
+
         private readonly AD7Engine _engine;
         private readonly IPAddress _ipAddress;
         private readonly List<AD7PendingBreakpoint> _pendingBreakpoints = new List<AD7PendingBreakpoint>();
@@ -125,7 +122,7 @@ namespace aspnet_debug.Debugger.VisualStudio
 
                     var type = set.Events.First().EventType;
                     if (type != EventType.TypeLoad)
-                        Debug.Print($"Event : { string.Join(",", set.Events.Select(e => e.EventType))}");
+                        Logger.Log("Event: " + string.Join(",", set.Events.Select(e => e.EventType)));
 
                     foreach (Event ev in set.Events)
                     {
@@ -141,7 +138,7 @@ namespace aspnet_debug.Debugger.VisualStudio
         private void HandleEventSet(Event ev)
         {
             var type = ev.EventType;
-
+            Logger.Log(ev.ToString());
             switch (type)
             {
                 case EventType.Breakpoint:
@@ -166,7 +163,7 @@ namespace aspnet_debug.Debugger.VisualStudio
                     Disconnect();
                     return;
                 default:
-                    //logger.Trace(ev);
+                    
                     break;
             }
 
@@ -246,14 +243,14 @@ namespace aspnet_debug.Debugger.VisualStudio
                         }
                         catch (Exception ex)
                         {
-                            //logger.Error("Cant bind breakpoint: " + ex);
+                            Logger.Log("Cant bind breakpoint: " + ex);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                //logger.Error("Cant bind breakpoint: " + ex);
+                Logger.Log("Cant bind breakpoint: " + ex);
             }
 
             return countBounded;
@@ -279,7 +276,7 @@ namespace aspnet_debug.Debugger.VisualStudio
                 string typeName = typeMirror.Name;
                 if (!string.IsNullOrEmpty(typeMirror.Namespace))
                     typeName = typeMirror.Namespace + "." + typeMirror.Name;
-                //logger.Trace("Loaded and registered Type: " + typeName);
+                Logger.Log("Loaded and registered Type: " + typeName);
             }
         }
 

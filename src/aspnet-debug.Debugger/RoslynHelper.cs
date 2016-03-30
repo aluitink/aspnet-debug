@@ -22,7 +22,7 @@ namespace aspnet_debug.Debugger
         {
             try
             {
-                //logger.Trace("Line: {0} Column: {1} Source: {2}", startLine, startColumn, fileName);
+                Logger.Log(string.Format("Line: {0} Column: {1} Source: {2}", startLine, startColumn, fileName));
 
                 using (var stream = File.OpenRead(fileName))
                 {
@@ -48,7 +48,7 @@ namespace aspnet_debug.Debugger
             }
             catch (Exception ex)
             {
-                //logger.Trace($"Exception : {ex}");
+                Logger.Log($"Exception : {ex}");
                 return null;
             }
         }

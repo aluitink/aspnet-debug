@@ -9,7 +9,10 @@ using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.IO;
 using System.Runtime.InteropServices;
+using aspnet_debug.Debugger.VisualStudio;
+using aspnet_debug.Shared.Logging;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
@@ -67,9 +70,56 @@ namespace aspnet_debug.Extension
         protected override void Initialize()
         {
             AttachDebuggerCommand.Initialize(this);
+
+            TryRegisterAssembly();
+
             base.Initialize();
         }
 
+
+        private void TryRegisterAssembly()
+        {
+            try
+            {
+                RegistryKey regKey = Registry.ClassesRoot.OpenSubKey(@"CLSID\{8BF3AB9F-3864-449A-93AB-E7B0935FC8F5}");
+
+                if (regKey != null)
+                    return;
+
+                string location = typeof(DebuggedProcess).Assembly.Location;
+
+                string regasm = @"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\RegAsm.exe";
+                if (!Environment.Is64BitOperatingSystem)
+                    regasm = @"C:\Windows\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe";
+
+                var p = new ProcessStartInfo(regasm, location);
+                p.Verb = "runas";
+                p.RedirectStandardOutput = true;
+                p.UseShellExecute = false;
+                p.CreateNoWindow = true;
+
+                Process proc = Process.Start(p);
+                while (!proc.HasExited)
+                {
+                    string txt = proc.StandardOutput.ReadToEnd();
+                }
+
+                using (RegistryKey config = VSRegistry.RegistryRoot(__VsLocalRegistryType.RegType_Configuration))
+                {
+                    MonoDebuggerInstaller.RegisterDebugEngine(location, config);
+                }
+            }
+            catch (UnauthorizedAccessException)
+            {
+                //MessageBox.Show(
+                //    "Failed finish installation of MonoRemoteDebugger - Please run Visual Studio once as Administrator...",
+                //    "MonoRemoteDebugger", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                //logger.Error(ex);
+            }
+        }
         #endregion
     }
 }
